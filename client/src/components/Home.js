@@ -23,14 +23,18 @@ const Home = () => {
       .catch(err => console.log('error occurred at home axios ', err));
   }, [location.key]);
 
-  const deleteCandidate = id => {
-    axios
-      .delete(`/api/candidate/${id}`)
-      .then(res => {
-        window.alert('data seccessfuly deleted!');
-        navigate(0);
-      })
-      .catch(err => console.log('error occurred in delete axios ', err));
+  const deleteCandidate = (id, firstName, lastName) => {
+    const result = window.confirm(`Do you want to delete candidate ${firstName} ${lastName}?`);
+    if (result) {
+      axios
+        .delete(`/api/candidate/${id}`)
+        .then(res => {
+          window.alert('data seccessfuly deleted!');
+          navigate(0);
+        })
+        .catch(err => console.log('error occurred in delete axios ', err));
+    }
+    return;
   };
 
   const updateCandidate = candidate => {
@@ -68,21 +72,23 @@ const Home = () => {
       </nav>
       <div>
         <Link to={'/create'}>
-          <Button variant='outline-dark'>
-            Create Candidate <span className='material-symbols-outlined'>person_add</span>
+          <Button variant='outline-dark' className='create'>
+            <span>Create Candidate </span>
+            <span className='material-symbols-outlined'> person_add</span>
           </Button>
         </Link>
       </div>
       <div>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Update candidate's information</Modal.Title>
+            <Modal.Title>Update Candidate's Information</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form>
               <FormGroup>
-                <Form.Label>First name</Form.Label>
+                <Form.Label className='bold'>First name</Form.Label>
                 <Form.Control
+                  className='form-input'
                   name='first_name'
                   value={updatedCandidate.first_name}
                   placeholder='first name'
@@ -90,8 +96,9 @@ const Home = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Form.Label>Last name</Form.Label>
+                <Form.Label className='bold'>Last name</Form.Label>
                 <Form.Control
+                  className='form-input'
                   name='last_name'
                   value={updatedCandidate.last_name}
                   placeholder='last name'
@@ -99,8 +106,9 @@ const Home = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Form.Label>Email address</Form.Label>
+                <Form.Label className='bold'>Email address</Form.Label>
                 <Form.Control
+                  className='form-input'
                   name='email'
                   value={updatedCandidate.email}
                   type='email'
@@ -109,8 +117,9 @@ const Home = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Form.Label>Phone number</Form.Label>
+                <Form.Label className='bold'>Phone number</Form.Label>
                 <Form.Control
+                  className='form-input'
                   name='phone'
                   value={updatedCandidate.phone}
                   type='tel'
@@ -119,8 +128,9 @@ const Home = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Form.Label>Position</Form.Label>
+                <Form.Label className='bold'>Position</Form.Label>
                 <Form.Control
+                  className='form-input'
                   name='position'
                   value={updatedCandidate.position}
                   placeholder='position'
@@ -128,8 +138,9 @@ const Home = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Form.Label>Location</Form.Label>
+                <Form.Label className='bold'>Location</Form.Label>
                 <Form.Control
+                  className='form-input'
                   name='location'
                   value={updatedCandidate.location ? updatedCandidate.location : ''}
                   placeholder='location'
@@ -137,16 +148,21 @@ const Home = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Form.Label>Over 18?</Form.Label>
-                <Form.Select name='over18' value={updatedCandidate.over18} onChange={handleChange}>
+                <Form.Label className='bold'>Over 18?</Form.Label>
+                <Form.Select
+                  className='form-input'
+                  name='over18'
+                  value={updatedCandidate.over18}
+                  onChange={handleChange}>
                   <option value=''>-- Select from the dropdown --</option>
                   <option value={true}>Yes</option>
                   <option value={false}>No</option>
                 </Form.Select>
               </FormGroup>
               <FormGroup>
-                <Form.Label>Legally authorized to work in US?</Form.Label>
+                <Form.Label className='bold'>Legally authorized to work in US?</Form.Label>
                 <Form.Select
+                  className='form-input'
                   name='legallyauthtoworkinus'
                   value={updatedCandidate.legallyauthtoworkinus}
                   onChange={handleChange}>
@@ -156,8 +172,12 @@ const Home = () => {
                 </Form.Select>
               </FormGroup>
               <FormGroup>
-                <Form.Label>Applicant Status</Form.Label>
-                <Form.Select name='status' value={updatedCandidate.status} onChange={handleChange}>
+                <Form.Label className='bold'>Applicant Status</Form.Label>
+                <Form.Select
+                  className='form-input'
+                  name='status'
+                  value={updatedCandidate.status}
+                  onChange={handleChange}>
                   <option value=''>-- Select from the status --</option>
                   <option value='new'>New</option>
                   <option value='interview scheduled'>Interview scheduled</option>
@@ -169,7 +189,7 @@ const Home = () => {
                 </Form.Select>
               </FormGroup>
               <FormGroup>
-                <Form.Label>Notes</Form.Label>
+                <Form.Label className='bold'>Notes</Form.Label>
                 <Form.Control
                   name='notes'
                   value={updatedCandidate.notes ? updatedCandidate.notes : ''}
@@ -179,10 +199,6 @@ const Home = () => {
                   onChange={handleChange}
                 />
               </FormGroup>
-              {/* <Button onClick={handleClick}>Save</Button>
-              <Link to={'/'}>
-                <Button>Back</Button>
-              </Link> */}
             </Form>
           </Modal.Body>
           <Modal.Footer>
@@ -195,11 +211,10 @@ const Home = () => {
           </Modal.Footer>
         </Modal>
       </div>
-      <main>
-        <Table bordered hover>
-          <thead>
+      <main className='container'>
+        <Table bordered hover className='center'>
+          <thead className='table-header'>
             <tr>
-              {/* first_name, last_name, email, phone, position, location, over18, legallyAuthToWorkInUS, status, notes */}
               <th>#</th>
               <th>First Name</th>
               <th>Last Name</th>
@@ -211,7 +226,7 @@ const Home = () => {
               <th>Legally Authorized to Work in US?</th>
               <th>Applicant Status</th>
               <th>Notes</th>
-              <th>Action</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -231,16 +246,22 @@ const Home = () => {
                       <td>{candidate.legallyauthtoworkinus ? 'Yes' : 'No'}</td>
                       <td>{candidate.status}</td>
                       <td>{candidate.notes}</td>
-                      <td>
+                      <td className='two-btns'>
                         <Button
+                          className='edit-btn'
                           variant='outline-primary'
                           onClick={() => updateCandidate(candidate)}>
                           <span className='material-symbols-outlined'>edit</span>
                         </Button>
-
                         <Button
                           variant='outline-danger'
-                          onClick={() => deleteCandidate(candidate._id)}>
+                          onClick={() =>
+                            deleteCandidate(
+                              candidate._id,
+                              candidate.first_name,
+                              candidate.last_name
+                            )
+                          }>
                           <span className='material-symbols-outlined'>delete</span>
                         </Button>
                       </td>
