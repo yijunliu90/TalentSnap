@@ -4,7 +4,7 @@ import { Button } from 'react-bootstrap';
 import { Routes, Route } from 'react-router-dom';
 import Home from './Home';
 import CreateCandidate from './createCandidate';
-import UpdateCandidate from './UpdateCandidate';
+// import UpdateCandidate from './UpdateCandidate';
 
 const App = () => {
   return (

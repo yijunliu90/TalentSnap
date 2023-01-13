@@ -1,10 +1,93 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Form, FormGroup } from 'react-bootstrap';
-import { useState } from 'react';
 import axios from 'axios';
 
+const apiKey = YOUR_GOOGLE_MAP_API_KEY;
+const mapApiJs = 'https://maps.googleapis.com/maps/api/js';
+
+function loadAsyncScript(src) {
+  return new Promise(resolve => {
+    const script = document.createElement('script');
+    Object.assign(script, {
+      type: 'text/javascript',
+      async: true,
+      src
+    });
+    script.addEventListener('load', () => resolve(script));
+    document.head.appendChild(script);
+  });
+}
+
+const extractAddress = place => {
+  const address = {
+    city: '',
+    state: '',
+    zip: '',
+    country: ''
+  };
+
+  if (!Array.isArray(place?.address_components)) {
+    return address;
+  }
+
+  place.address_components.forEach(component => {
+    const types = component.types;
+    const value = component.long_name;
+    if (types.includes('locality')) {
+      address.city = value;
+    }
+
+    if (types.includes('administrative_area_level_1')) {
+      address.state = value;
+    }
+
+    if (types.includes('postal_code')) {
+      address.zip = value;
+    }
+
+    if (types.includes('country')) {
+      address.country = value;
+    }
+  });
+
+  return address;
+};
+
 const CreateCandidate = () => {
+  const searchInput = useRef(null);
+  const [address, setAddress] = useState({});
+
+  // init gmap script
+  const initMapScript = () => {
+    // if script already loaded
+    if (window.google) {
+      return Promise.resolve();
+    }
+    const src = `${mapApiJs}?key=${apiKey}&libraries=places&v=weekly`;
+    return loadAsyncScript(src);
+  };
+
+  // do something on address change
+  const onChangeAddress = autocomplete => {
+    const place = autocomplete.getPlace();
+    setAddress(extractAddress(place));
+  };
+
+  // init autocomplete
+  const initAutocomplete = () => {
+    if (!searchInput.current) return;
+
+    const autocomplete = new window.google.maps.places.Autocomplete(searchInput.current);
+    autocomplete.setFields(['address_component', 'geometry']);
+    autocomplete.addListener('place_changed', () => onChangeAddress(autocomplete));
+  };
+
+  // load map script after mounted
+  useEffect(() => {
+    initMapScript().then(() => initAutocomplete());
+  }, []);
+
   const navigate = useNavigate();
   const [candidate, setCandidate] = useState({
     first_name: '',
@@ -21,10 +104,12 @@ const CreateCandidate = () => {
 
   const handleChange = e => {
     const { name, value } = e.target;
+    const googleLocation = `${address.city}, ${address.state}, ${address.country}`;
     setCandidate(prev => {
       return {
         ...prev,
-        [name]: value
+        [name]: value,
+        location: googleLocation
       };
     });
   };
@@ -57,11 +142,11 @@ const CreateCandidate = () => {
 
   return (
     <div>
-      <h1 className='center header'>Create a candidate</h1>
+      <h1 className='center header'>Create a Candidate</h1>
       <main className='container-form'>
         <Form>
           <FormGroup>
-            <Form.Label className='bold'>First name</Form.Label>
+            <Form.Label className='bold'>First Name</Form.Label>
             <Form.Control
               className='form-input'
               name='first_name'
@@ -71,7 +156,7 @@ const CreateCandidate = () => {
             />
           </FormGroup>
           <FormGroup>
-            <Form.Label className='bold'>Last name</Form.Label>
+            <Form.Label className='bold'>Last Name</Form.Label>
             <Form.Control
               className='form-input'
               name='last_name'
@@ -81,7 +166,7 @@ const CreateCandidate = () => {
             />
           </FormGroup>
           <FormGroup>
-            <Form.Label className='bold'>Email address</Form.Label>
+            <Form.Label className='bold'>Email Address</Form.Label>
             <Form.Control
               className='form-input'
               name='email'
@@ -92,7 +177,7 @@ const CreateCandidate = () => {
             />
           </FormGroup>
           <FormGroup>
-            <Form.Label className='bold'>Phone number</Form.Label>
+            <Form.Label className='bold'>Phone Number</Form.Label>
             <Form.Control
               className='form-input'
               name='phone'
@@ -120,7 +205,15 @@ const CreateCandidate = () => {
               value={candidate.location}
               placeholder='location'
               onChange={handleChange}
+              style={{ display: 'none' }}
             />
+            <div>
+              <input
+                className='search-location'
+                ref={searchInput}
+                placeholder='search location...'
+              />
+            </div>
           </FormGroup>
           <FormGroup>
             <Form.Label className='bold'>Over 18?</Form.Label>

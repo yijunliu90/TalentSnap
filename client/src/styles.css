@@ -15,7 +15,7 @@ nav {
 }
 
 .create {
-  margin: 2rem 3rem;
+  margin-bottom: 2rem;
 }
 
 .create span:last-child {
@@ -71,4 +71,13 @@ nav {
 
 .back-btn {
   width: 45%;
+}
+
+.search-location {
+  border: 1px solid rgb(206, 212, 208);
+  border-radius: 5px;
+  line-height: 2rem;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding-left: 0.8rem;
 }

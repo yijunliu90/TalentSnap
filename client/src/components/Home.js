@@ -71,14 +71,6 @@ const Home = () => {
         <h1>Applicant Tracking System</h1>
       </nav>
       <div>
-        <Link to={'/create'}>
-          <Button variant='outline-dark' className='create'>
-            <span>Create Candidate </span>
-            <span className='material-symbols-outlined'> person_add</span>
-          </Button>
-        </Link>
-      </div>
-      <div>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>Update Candidate's Information</Modal.Title>
@@ -86,7 +78,7 @@ const Home = () => {
           <Modal.Body>
             <Form>
               <FormGroup>
-                <Form.Label className='bold'>First name</Form.Label>
+                <Form.Label className='bold'>First Name</Form.Label>
                 <Form.Control
                   className='form-input'
                   name='first_name'
@@ -96,7 +88,7 @@ const Home = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Form.Label className='bold'>Last name</Form.Label>
+                <Form.Label className='bold'>Last Name</Form.Label>
                 <Form.Control
                   className='form-input'
                   name='last_name'
@@ -106,7 +98,7 @@ const Home = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Form.Label className='bold'>Email address</Form.Label>
+                <Form.Label className='bold'>Email Address</Form.Label>
                 <Form.Control
                   className='form-input'
                   name='email'
@@ -117,7 +109,7 @@ const Home = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Form.Label className='bold'>Phone number</Form.Label>
+                <Form.Label className='bold'>Phone Number</Form.Label>
                 <Form.Control
                   className='form-input'
                   name='phone'
@@ -212,6 +204,14 @@ const Home = () => {
         </Modal>
       </div>
       <main className='container'>
+        <div>
+          <Link to={'/create'}>
+            <Button variant='outline-dark' className='create'>
+              <span>Create Candidate </span>
+              <span className='material-symbols-outlined'> person_add</span>
+            </Button>
+          </Link>
+        </div>
         <Table bordered hover className='center'>
           <thead className='table-header'>
             <tr>
