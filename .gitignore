@@ -1,6 +1,7 @@
 node_modules
 dist/*.js
 npm-debug.log
+package-lock.json
 .DS_Store
 .env
 .env.local
