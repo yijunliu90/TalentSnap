@@ -3,7 +3,7 @@ const db = require('../models/candidateModels');
 const candidateController = {};
 
 candidateController.getCandidates = (req, res, next) => {
-  const text = 'SELECT * FROM candidates';
+  const text = 'SELECT * FROM candidates ORDER BY _id';
   db.query(text).then(data => {
     res.locals.candidates = data.rows;
     return next();
@@ -11,7 +11,6 @@ candidateController.getCandidates = (req, res, next) => {
 };
 
 candidateController.addCandidate = async (req, res, next) => {
-  console.log(req.body);
   const {
     first_name,
     last_name,
@@ -20,12 +19,12 @@ candidateController.addCandidate = async (req, res, next) => {
     position,
     location,
     over18,
-    legallyAuthToWorkInUS,
+    legallyauthtoworkinus,
     status,
     notes
   } = req.body;
   const text = `
-    INSERT INTO candidates(first_name, last_name, email, phone, position, location, over18, legallyAuthToWorkInUS, status, notes)
+    INSERT INTO candidates(first_name, last_name, email, phone, position, location, over18, legallyauthtoworkinus, status, notes)
     VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *
   `;
   const values = [
@@ -36,7 +35,7 @@ candidateController.addCandidate = async (req, res, next) => {
     position,
     location,
     over18,
-    legallyAuthToWorkInUS,
+    legallyauthtoworkinus,
     status,
     notes
   ];
@@ -90,7 +89,7 @@ candidateController.updateCandidate = (req, res, next) => {
         position = $5,
         location = $6,
         over18 = $7,
-        legallyAuthToWorkInUS = $8,
+        legallyauthtoworkinus = $8,
         status = $9,
         notes = $10
     WHERE _id = $11

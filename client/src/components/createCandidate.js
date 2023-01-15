@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button, Form, FormGroup } from 'react-bootstrap';
 import axios from 'axios';
 
-const apiKey = YOUR_GOOGLE_MAP_API_KEY;
+const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 const mapApiJs = 'https://maps.googleapis.com/maps/api/js';
 
 function loadAsyncScript(src) {
